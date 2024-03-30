@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petchrama_theater/presentation/page/home_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // To install Riverpod, we need to add this widget above everything else.
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

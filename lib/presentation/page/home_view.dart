@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:petchrama_theater/utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petchrama_theater/domain/provider.dart';
+import 'package:petchrama_theater/utils/resource/utils.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
+  // @override
+  // State<HomeView> createState() => _HomeViewState();
+
   @override
-  State<HomeView> createState() => _HomeViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends ConsumerState<HomeView> {
   late Utils _utils;
+
   @override
   void initState() {
     super.initState();
@@ -18,6 +24,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final popularMovies = ref.read(popularMoviesProvider);
+
     return Scaffold(
       body: SafeArea(
           child: CustomScrollView(
@@ -36,7 +44,11 @@ class _HomeViewState extends State<HomeView> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              _nowPlayingMovies(),
+              popularMovies.when(
+                  data: (data) => Text(data.results![0].id.toString()),
+                  error: (error, StackTrace) => Text('Error: $error'),
+                  loading: () => CircularProgressIndicator()),
+              // _nowPlayingMovies(),
               // _popularMovies(),
               // _topRateMovies(),
               // _upComingMovies(),
