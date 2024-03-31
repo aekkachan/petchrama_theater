@@ -21,7 +21,7 @@ class _MoviesRestApi implements MoviesRestApi {
   String? baseUrl;
 
   @override
-  Future<Popular> getNowPlayingMovies(
+  Future<NowPlaying> getNowPlayingMovies(
     String language,
     String page,
   ) async {
@@ -30,23 +30,17 @@ class _MoviesRestApi implements MoviesRestApi {
       r'language': language,
       r'page': page,
     };
-    final _headers = <String, dynamic>{
-      r'Content-Type': 'application/json',
-      r'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZDM0YThhZGU1M2E5YjhiMTBlOTc4NTVkZTA5ODEyOCIsInN1YiI6IjYzMzFkZjUyNjdlMGY3MDA3ZWM4NzZhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zHDKcacAzFZg7MHKXuxWafjIZcHrq1ZKugMBzU6iTBQ',
-    };
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Popular>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<NowPlaying>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
-      contentType: 'application/json',
     )
             .compose(
               _dio.options,
-              'https://api.themoviedb.org/3/movie',
+              '/now_playing',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -55,7 +49,7 @@ class _MoviesRestApi implements MoviesRestApi {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Popular.fromJson(_result.data!);
+    final value = NowPlaying.fromJson(_result.data!);
     return value;
   }
 
@@ -79,7 +73,7 @@ class _MoviesRestApi implements MoviesRestApi {
     )
             .compose(
               _dio.options,
-              'https://api.themoviedb.org/3/movie',
+              '/popular',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -93,7 +87,7 @@ class _MoviesRestApi implements MoviesRestApi {
   }
 
   @override
-  Future<Popular> getTopRateMovies(
+  Future<TopRate> getTopRateMovies(
     String language,
     String page,
   ) async {
@@ -105,14 +99,14 @@ class _MoviesRestApi implements MoviesRestApi {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Popular>(Options(
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<TopRate>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'https://api.themoviedb.org/3/movie',
+              '/top_rated',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -121,12 +115,12 @@ class _MoviesRestApi implements MoviesRestApi {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Popular.fromJson(_result.data!);
+    final value = TopRate.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<Popular> getUpcomingMovies(
+  Future<Upcoming> getUpcomingMovies(
     String language,
     String page,
   ) async {
@@ -138,14 +132,14 @@ class _MoviesRestApi implements MoviesRestApi {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Popular>(Options(
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Upcoming>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'https://api.themoviedb.org/3/movie',
+              '/upcoming',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -154,7 +148,7 @@ class _MoviesRestApi implements MoviesRestApi {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Popular.fromJson(_result.data!);
+    final value = Upcoming.fromJson(_result.data!);
     return value;
   }
 

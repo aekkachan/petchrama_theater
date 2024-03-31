@@ -10,5 +10,5 @@ class Utils {
 
   double getHeight() => MediaQuery.of(context).size.height;
 
-  Future<bool> checkInternetConnection() async => await InternetConnection().hasInternetAccess;
+  static Future<bool> checkInternetConnection() async => await InternetConnection().hasInternetAccess;
 }

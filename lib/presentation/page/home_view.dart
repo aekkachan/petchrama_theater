@@ -1,6 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petchrama_theater/data/model/now_playing.dart' as _nowPlaying;
+import 'package:petchrama_theater/data/model/popular.dart' as _popular;
+import 'package:petchrama_theater/data/model/top_rate.dart' as _topRate;
 import 'package:petchrama_theater/domain/provider.dart';
+import 'package:petchrama_theater/presentation/page/movie_detail.dart';
+import 'package:petchrama_theater/utils/constants/apis.dart';
 import 'package:petchrama_theater/utils/resource/utils.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -24,7 +30,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final popularMovies = ref.read(popularMoviesProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -33,7 +39,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           SliverAppBar(
             pinned: true,
             floating: true,
-            expandedHeight: _utils.getHeight() / 2.3,
+            expandedHeight: _utils.getHeight() * 0.4,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text('Movies Name'),
               background: Image.network(
@@ -43,23 +49,26 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           SliverList(
-            delegate: SliverChildListDelegate([
-              popularMovies.when(
-                  data: (data) => Text(data.results![0].id.toString()),
+            delegate: SliverChildListDelegate(
+              [
+                nowPlayingMovies.when(
+                  data: (data) => _nowPlayingMovies(data!.results!),
                   error: (error, StackTrace) => Text('Error: $error'),
-                  loading: () => CircularProgressIndicator()),
-              // _nowPlayingMovies(),
-              // _popularMovies(),
-              // _topRateMovies(),
-              // _upComingMovies(),
-            ]),
+                  loading: () => Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       )),
     );
   }
 
-  Widget _nowPlayingMovies() {
+  Widget _nowPlayingMovies(List<_nowPlaying.Result> result) {
     return Container(
       margin: EdgeInsets.only(left: _utils.getWidth() * 0.03, top: _utils.getHeight() * 0.03, right: _utils.getWidth() * 0.03),
       child: Column(
@@ -82,57 +91,89 @@ class _HomeViewState extends ConsumerState<HomeView> {
           SizedBox(
             height: _utils.getHeight() * 0.02,
           ),
-          Stack(
-            children: [
-              Container(
-                height: _utils.getHeight() * 0.28,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: 5,
-                  itemBuilder: (context, index) => Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
-                        margin: EdgeInsets.only(right: _utils.getWidth() * 0.02),
-                        width: _utils.getWidth() * 0.40,
-                      ),
-                      Positioned(
-                        top: 10,
-                        left: 10,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 3, top: 3, right: 5, bottom: 3),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.red),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.star_rate,
-                                color: Colors.amber,
-                                size: 15,
+          Container(
+            height: _utils.getHeight() * 0.28,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: result.length,
+              itemBuilder: (context, index) => Container(
+                margin: EdgeInsets.only(right: 10),
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MovieDetail(
+                                    imgPath: '${Apis.baseTMDBimg}${result[index].posterPath}',
+                                    title: result[index].title,
+                                    content: result[index].overview,
+                                    voteAgerage: result[index].voteAverage,
+                                    voteCount: result[index].voteCount,
+                                    releaseDate: result[index].releaseDate,
+                                    orginalLanguage: result[index].originalLanguage,
+                                    isAdule: result[index].adult,
+                                  )),
+                        );
+                      },
+                      child: Hero(
+                        tag: 'movie_poster',
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Container(
+                            width: _utils.getWidth() * 0.40,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              imageUrl: '${Apis.baseTMDBimg}${result[index].posterPath}',
+                              progressIndicatorBuilder: (context, url, downloadProgress) => Container(
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(value: downloadProgress.progress),
                               ),
-                              Text(
-                                '9.5',
-                                style: TextStyle(color: Colors.white, fontSize: 11),
-                              )
-                            ],
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 3, top: 3, right: 5, bottom: 3),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.red),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.star_rate,
+                              color: Colors.amber,
+                              size: 13,
+                            ),
+                            Text(
+                              result[index].voteAverage!.toStringAsFixed(1),
+                              textAlign: TextAlign.center,
+                              softWrap: true,
+                              style: TextStyle(color: Colors.white, fontSize: 10),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _popularMovies() {
+  Widget _popularMovies(List<_popular.Result> result) {
     return Container(
       margin: EdgeInsets.only(left: _utils.getWidth() * 0.03, top: _utils.getHeight() * 0.03, right: _utils.getWidth() * 0.03),
       child: Column(
@@ -160,7 +201,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: 5,
+                itemCount: result.length,
                 itemBuilder: (context, index) => Container(
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
                       margin: EdgeInsets.only(right: 5),
@@ -172,7 +213,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _topRateMovies() {
+  Widget _topRateMovies(List<_topRate.Result> result) {
     return Container(
       margin: EdgeInsets.only(left: _utils.getWidth() * 0.03, top: _utils.getHeight() * 0.03, right: _utils.getWidth() * 0.03),
       child: Column(
