@@ -107,6 +107,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => MovieDetail(
+                                    imgTag: 'movie_poster$index',
                                     imgPath: '${Apis.baseTMDBimg}${result[index].posterPath}',
                                     title: result[index].title,
                                     content: result[index].overview,
@@ -114,12 +115,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                     voteCount: result[index].voteCount,
                                     releaseDate: result[index].releaseDate,
                                     orginalLanguage: result[index].originalLanguage,
-                                    isAdule: result[index].adult,
+                                    isAdult: result[index].adult,
+                                    genreIds: result[index].genreIds,
                                   )),
                         );
                       },
                       child: Hero(
-                        tag: 'movie_poster',
+                        tag: 'movie_poster$index',
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Container(
@@ -142,7 +144,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       left: 10,
                       child: Container(
                         padding: EdgeInsets.only(left: 3, top: 3, right: 5, bottom: 3),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.red),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: Colors.red.shade600),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -151,13 +153,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             Icon(
                               Icons.star_rate,
                               color: Colors.amber,
-                              size: 13,
+                              size: 14,
                             ),
                             Text(
                               result[index].voteAverage!.toStringAsFixed(1),
                               textAlign: TextAlign.center,
                               softWrap: true,
-                              style: TextStyle(color: Colors.white, fontSize: 10),
+                              style: TextStyle(color: Colors.white, fontSize: 11),
                             )
                           ],
                         ),
