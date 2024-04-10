@@ -24,7 +24,7 @@ class RatingBar extends StatelessWidget {
       starList.add(Icon(
         Icons.star_sharp,
         color: Colors.amber,
-        size: 18,
+        size: 20,
       ));
     }
 
@@ -32,7 +32,7 @@ class RatingBar extends StatelessWidget {
       starList.add(Icon(
         Icons.star_half_sharp,
         color: Colors.amber,
-        size: 18,
+        size: 20,
       ));
 
     return starList;
