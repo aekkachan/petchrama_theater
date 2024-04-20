@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart' as _nowPlaying;
 import 'package:petchrama_theater/data/model/popular.dart' as _popular;
@@ -52,7 +53,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             delegate: SliverChildListDelegate(
               [
                 nowPlayingMovies.when(
-                  data: (data) => _nowPlayingMovies(data!.results!),
+                  data: (data) => _nowPlayingMoviesWidget(data!.results!),
                   error: (error, StackTrace) => Text('Error: $error'),
                   loading: () => Container(
                     child: Center(
@@ -68,7 +69,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _nowPlayingMovies(List<_nowPlaying.Result> result) {
+  Widget _nowPlayingMoviesWidget(List<_nowPlaying.Result> result) {
     return Container(
       margin: EdgeInsets.only(left: _utils.getWidth() * 0.03, top: _utils.getHeight() * 0.03, right: _utils.getWidth() * 0.03),
       child: Column(
@@ -105,8 +106,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => MovieDetail(
+                          PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 400),
+                              pageBuilder: (context, animation, secondaryAnimation) => MovieDetail(
                                     imgTag: 'movie_poster$index',
                                     imgPath: '${Apis.baseTMDBimg}${result[index].posterPath}',
                                     backdropPath: '${Apis.baseTMDBimg}${result[index].backdropPath}',

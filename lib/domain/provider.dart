@@ -1,4 +1,5 @@
 import 'package:petchrama_theater/data/datasources/remote/movies_rest_api.dart';
+import 'package:petchrama_theater/data/model/credits.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart';
 import 'package:petchrama_theater/data/model/popular.dart';
 import 'package:petchrama_theater/data/model/top_rate.dart';
@@ -49,5 +50,17 @@ Future<Upcoming?> upcomingMovies(UpcomingMoviesRef ref) async {
     return data;
   } catch (error) {
     return Upcoming();
+  }
+}
+
+@riverpod
+Future<Credits?> creditMovies(CreditMoviesRef ref) async {
+  try {
+    Credits data = await MoviesRestApi(DioConfiguration.getInstance()).getCredits('en-US', '693134');
+    print(data.cast![0].character);
+    print(data.cast![0].name);
+    return data;
+  } catch (error) {
+    return Credits();
   }
 }

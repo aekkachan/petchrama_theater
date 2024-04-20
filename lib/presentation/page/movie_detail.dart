@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petchrama_theater/domain/provider.dart';
 import 'package:petchrama_theater/presentation/widget/rating_bar.dart';
+import 'package:petchrama_theater/utils/constants/apis.dart';
 import 'package:petchrama_theater/utils/constants/genres.dart';
 import 'package:petchrama_theater/utils/resource/utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MovieDetail extends StatefulWidget {
+class MovieDetail extends ConsumerStatefulWidget {
   final imgTag; //
   final imgPath; //
   final backdropPath; //
@@ -33,10 +36,10 @@ class MovieDetail extends StatefulWidget {
       this.genreIds});
 
   @override
-  State<MovieDetail> createState() => _MovieDetailState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MovieDetailState();
 }
 
-class _MovieDetailState extends State<MovieDetail> {
+class _MovieDetailState extends ConsumerState<MovieDetail> {
   late Utils _utils;
 
   @override
@@ -47,6 +50,8 @@ class _MovieDetailState extends State<MovieDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final creditMovies = ref.watch(creditMoviesProvider);
+
     return Scaffold(
       body: SafeArea(
           child: CustomScrollView(
@@ -281,6 +286,71 @@ class _MovieDetailState extends State<MovieDetail> {
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: _utils.getWidth() * 0.02, right: _utils.getWidth() * 0.02),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Cast',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          Text(
+                            'See all',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    creditMovies.when(
+                      data: (data) => Padding(
+                        padding: EdgeInsets.only(
+                            left: _utils.getWidth() * 0.02, right: _utils.getWidth() * 0.02, bottom: _utils.getHeight() * 0.02),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              color: Colors.amber,
+                              width: _utils.getWidth() * 0.24,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data!.cast![0].profilePath}'),
+                            ),
+                            Container(
+                              color: Colors.red,
+                              width: _utils.getWidth() * 0.24,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![1].profilePath}'),
+                            ),
+                            Container(
+                              color: Colors.blue,
+                              width: _utils.getWidth() * 0.24,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![2].profilePath}'),
+                            ),
+                            Container(
+                              color: Colors.lightGreen,
+                              width: _utils.getWidth() * 0.24,
+                              height: 100,
+                              alignment: Alignment.center,
+                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![3].profilePath}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      error: (error, stackTrace) => Text('ERROR'),
+                      loading: () => Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],

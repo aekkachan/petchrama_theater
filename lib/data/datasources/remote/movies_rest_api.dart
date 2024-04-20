@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:petchrama_theater/data/model/credits.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart';
 import 'package:petchrama_theater/data/model/popular.dart';
 import 'package:petchrama_theater/data/model/top_rate.dart';
@@ -35,5 +36,11 @@ abstract class MoviesRestApi {
   Future<Upcoming> getUpcomingMovies(
     @Query("language") String language,
     @Query("page") String page,
+  );
+
+  @GET("/{id}${Apis.credits}")
+  Future<Credits> getCredits(
+    @Query("language") String language,
+    @Path("id") String id,
   );
 }
