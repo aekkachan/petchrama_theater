@@ -81,7 +81,7 @@ class _MovieDetailState extends State<MovieDetail> {
                         left: _utils.getWidth() * 0.01, top: _utils.getHeight() * 0.02, right: _utils.getWidth() * 0.03),
                     child: Text(
                       widget.title,
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 30, letterSpacing: 0.5),
                     ),
                   ),
                 ),
@@ -107,7 +107,7 @@ class _MovieDetailState extends State<MovieDetail> {
                           Text(
                             '${widget.voteCount} votes',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            style: TextStyle(fontSize: 14, letterSpacing: 0.5),
                           )
                         ],
                       ),
@@ -124,7 +124,7 @@ class _MovieDetailState extends State<MovieDetail> {
                           ),
                           Text(
                             '${Utils.convertDate2String(widget.releaseDate, 'dd MMM yyyy')}',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(fontSize: 15, letterSpacing: 0.5),
                           )
                         ],
                       )
@@ -144,15 +144,17 @@ class _MovieDetailState extends State<MovieDetail> {
                       child: Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Chip(
+                          elevation: 10,
                           backgroundColor: Colors.white70,
                           clipBehavior: Clip.antiAlias,
-                          elevation: 2,
                           labelStyle: TextStyle(color: Colors.black87),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           label: Text(
                             Genres.ids['${widget.genreIds[index]}']!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(letterSpacing: 0.5),
                           ),
                         ),
                       ),
@@ -167,7 +169,7 @@ class _MovieDetailState extends State<MovieDetail> {
                       bottom: _utils.getHeight() * 0.03),
                   child: Text(
                     widget.content,
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, letterSpacing: 0.5),
                   ),
                 ),
               ],
