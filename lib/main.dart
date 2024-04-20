@@ -16,18 +16,20 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
+  // bebasNeueTextTheme
+  // oswaldTextTheme
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
-        textTheme: GoogleFonts.bebasNeueTextTheme().apply(bodyColor: Colors.black),
-      ),
+          textTheme: GoogleFonts.bebasNeueTextTheme().apply(
+        bodyColor: Colors.black,
+      )),
       darkTheme: ThemeData.dark().copyWith(
-        textTheme: GoogleFonts.bebasNeueTextTheme().apply(
-          bodyColor: Colors.white,
-        ),
-      ),
+          textTheme: GoogleFonts.bebasNeueTextTheme().apply(
+        bodyColor: Colors.white,
+      )),
       themeMode: ThemeMode.dark,
       home: const HomeView(),
     );

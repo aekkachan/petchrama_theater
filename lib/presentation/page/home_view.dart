@@ -133,6 +133,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               builder: (context) => MovieDetail(
                                     imgTag: 'movie_poster$index',
                                     imgPath: '${Apis.baseTMDBimg}${result[index].posterPath}',
+                                    backdropPath: '${Apis.baseTMDBimg}${result[index].backdropPath}',
                                     title: result[index].title,
                                     content: result[index].overview,
                                     voteAgerage: result[index].voteAverage,
@@ -152,6 +153,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             width: _utils.getWidth() * 0.40,
                             child: CachedNetworkImage(
                               fit: BoxFit.fill,
+                              placeholderFadeInDuration: Duration(milliseconds: 500),
                               imageUrl: '${Apis.baseTMDBimg}${result[index].posterPath}',
                               progressIndicatorBuilder: (context, url, downloadProgress) => Container(
                                 alignment: Alignment.center,
