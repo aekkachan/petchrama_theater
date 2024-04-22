@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:petchrama_theater/data/datasources/remote/movies_rest_api.dart';
 import 'package:petchrama_theater/data/model/credits.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart';
@@ -63,4 +65,12 @@ Future<Credits?> creditMovies(CreditMoviesRef ref, String id) async {
   } catch (error) {
     return Credits();
   }
+}
+
+@riverpod
+Future<List<String>> loadMoreItems(LoadMoreItemsRef ref) async {
+  // Simulate a delay to mimic loading from a remote data source
+  await Future.delayed(Duration(seconds: 10));
+  // Generate and return a list of new items
+  return await List<String>.generate(20, (counter) => "Item $counter", growable: true);
 }
