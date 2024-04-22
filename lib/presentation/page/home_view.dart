@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart' as _nowPlaying;
 import 'package:petchrama_theater/data/model/popular.dart' as _popular;
 import 'package:petchrama_theater/data/model/top_rate.dart' as _topRate;
 import 'package:petchrama_theater/domain/provider.dart';
 import 'package:petchrama_theater/presentation/page/movie_detail.dart';
+import 'package:petchrama_theater/presentation/page/movie_list.dart';
 import 'package:petchrama_theater/utils/constants/apis.dart';
 import 'package:petchrama_theater/utils/resource/utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -20,13 +21,31 @@ class HomeView extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends ConsumerState<HomeView> {
+class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderStateMixin {
   late Utils _utils;
+
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _utils = Utils(context);
+
+    // Create an AnimationController
+    _controller = AnimationController(
+      duration: Duration(seconds: 1), // Adjust the duration as needed
+      vsync: this,
+    );
+
+    // Create a Tween to define the range of values for the animation (e.g., opacity)
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_controller);
+
+    // Start the animation
+    _controller.forward();
   }
 
   @override
@@ -81,11 +100,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
             children: [
               Text(
                 'Now Playing',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, letterSpacing: 4),
               ),
-              Text(
-                'see all',
-                style: TextStyle(color: Colors.red, fontSize: 15),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => MovieList(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'see all',
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                ),
               ),
             ],
           ),
@@ -108,10 +137,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           context,
                           PageRouteBuilder(
                               transitionDuration: Duration(milliseconds: 400),
+                              reverseTransitionDuration: Duration(milliseconds: 400),
                               pageBuilder: (context, animation, secondaryAnimation) => MovieDetail(
+                                    id: result[index].id.toString(),
                                     imgTag: 'movie_poster$index',
-                                    imgPath: '${Apis.baseTMDBimg}${result[index].posterPath}',
-                                    backdropPath: '${Apis.baseTMDBimg}${result[index].backdropPath}',
+                                    imgPath: '${Apis.baseTMDBimg500}${result[index].posterPath}',
+                                    backdropPath: '${Apis.baseTMDBimg500}${result[index].backdropPath}',
                                     title: result[index].title,
                                     content: result[index].overview,
                                     voteAgerage: result[index].voteAverage,
@@ -132,10 +163,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             child: CachedNetworkImage(
                               fit: BoxFit.fill,
                               placeholderFadeInDuration: Duration(milliseconds: 500),
-                              imageUrl: '${Apis.baseTMDBimg}${result[index].posterPath}',
+                              imageUrl: '${Apis.baseTMDBimg500}${result[index].posterPath}',
                               progressIndicatorBuilder: (context, url, downloadProgress) => Container(
                                 alignment: Alignment.center,
-                                child: CircularProgressIndicator(value: downloadProgress.progress),
+                                child: _thumbnailLoading(),
                               ),
                               errorWidget: (context, url, error) => Icon(Icons.error),
                             ),
@@ -295,6 +326,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     )),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _thumbnailLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade400,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        width: _utils.getWidth() * 0.40,
+        height: _utils.getHeight() * 0.28,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey,
+        ),
       ),
     );
   }

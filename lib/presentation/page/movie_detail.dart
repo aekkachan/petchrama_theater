@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petchrama_theater/domain/provider.dart';
 import 'package:petchrama_theater/presentation/widget/rating_bar.dart';
@@ -9,20 +10,22 @@ import 'package:petchrama_theater/utils/resource/utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MovieDetail extends ConsumerStatefulWidget {
-  final imgTag; //
-  final imgPath; //
-  final backdropPath; //
-  final title; //
-  final content; //
-  final voteAgerage; //
-  final voteCount; //
-  final releaseDate; //
+  final id;
+  final imgTag;
+  final imgPath;
+  final backdropPath;
+  final title;
+  final content;
+  final voteAgerage;
+  final voteCount;
+  final releaseDate;
   final orginalLanguage;
   final isAdult;
-  final genreIds; //
+  final genreIds;
 
   const MovieDetail(
       {super.key,
+      this.id,
       this.imgTag,
       this.imgPath,
       this.backdropPath,
@@ -50,7 +53,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final creditMovies = ref.watch(creditMoviesProvider);
+    final creditMovies = ref.watch(creditMoviesProvider(widget.id));
 
     return Scaffold(
       body: SafeArea(
@@ -58,7 +61,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
-            pinned: true,
+            pinned: false,
             floating: true,
             expandedHeight: _utils.getHeight() * 0.35,
             flexibleSpace: FlexibleSpaceBar(
@@ -79,22 +82,8 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                       },
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
+                        fadeInDuration: Duration(seconds: 1),
                         imageUrl: widget.backdropPath,
-                        progressIndicatorBuilder: (context, url, downloadProgress) => Container(
-                          alignment: Alignment.center,
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey.shade400,
-                            highlightColor: Colors.grey.shade100,
-                            child: Container(
-                              width: _utils.getWidth() * 0.9,
-                              height: _utils.getHeight() * 0.28,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
@@ -232,6 +221,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
                                 child: CachedNetworkImage(
                                   fit: BoxFit.fitWidth,
+                                  fadeInDuration: Duration(seconds: 1),
                                   width: _utils.getWidth() * 0.30,
                                   imageUrl: widget.imgPath,
                                   progressIndicatorBuilder: (context, url, downloadProgress) => Container(
@@ -286,22 +276,12 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    Padding(
+                    Container(
                       padding: EdgeInsets.only(left: _utils.getWidth() * 0.02, right: _utils.getWidth() * 0.02),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Cast',
-                            style: TextStyle(fontSize: 25),
-                          ),
-                          Text(
-                            'See all',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ],
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Cast',
+                        style: TextStyle(fontSize: 25),
                       ),
                     ),
                     creditMovies.when(
@@ -313,43 +293,15 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              color: Colors.amber,
-                              width: _utils.getWidth() * 0.24,
-                              height: 100,
-                              alignment: Alignment.center,
-                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data!.cast![0].profilePath}'),
-                            ),
-                            Container(
-                              color: Colors.red,
-                              width: _utils.getWidth() * 0.24,
-                              height: 100,
-                              alignment: Alignment.center,
-                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![1].profilePath}'),
-                            ),
-                            Container(
-                              color: Colors.blue,
-                              width: _utils.getWidth() * 0.24,
-                              height: 100,
-                              alignment: Alignment.center,
-                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![2].profilePath}'),
-                            ),
-                            Container(
-                              color: Colors.lightGreen,
-                              width: _utils.getWidth() * 0.24,
-                              height: 100,
-                              alignment: Alignment.center,
-                              child: CachedNetworkImage(imageUrl: '${Apis.baseTMDBimg}${data.cast![3].profilePath}'),
-                            ),
+                            _castImg('${Apis.baseTMDBimg200}${data!.cast![0].profilePath}'),
+                            _castImg('${Apis.baseTMDBimg200}${data.cast![1].profilePath}'),
+                            _castImg('${Apis.baseTMDBimg200}${data.cast![2].profilePath}'),
+                            _castImg('${Apis.baseTMDBimg200}${data.cast![3].profilePath}'),
                           ],
                         ),
                       ),
                       error: (error, stackTrace) => Text('ERROR'),
-                      loading: () => Container(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
+                      loading: () => SizedBox.shrink(),
                     )
                   ],
                 ),
@@ -358,6 +310,20 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
           ),
         ],
       )),
+    );
+  }
+
+  Widget _castImg(String imgPath) {
+    return Container(
+      width: _utils.getWidth() * 0.24,
+      height: 120,
+      alignment: Alignment.center,
+      child: CachedNetworkImage(
+        fadeInDuration: Duration(seconds: 1),
+        imageUrl: imgPath,
+        fit: BoxFit.cover,
+        width: _utils.getWidth() * 0.2,
+      ),
     );
   }
 }

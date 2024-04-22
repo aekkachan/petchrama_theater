@@ -54,9 +54,9 @@ Future<Upcoming?> upcomingMovies(UpcomingMoviesRef ref) async {
 }
 
 @riverpod
-Future<Credits?> creditMovies(CreditMoviesRef ref) async {
+Future<Credits?> creditMovies(CreditMoviesRef ref, String id) async {
   try {
-    Credits data = await MoviesRestApi(DioConfiguration.getInstance()).getCredits('en-US', '693134');
+    Credits data = await MoviesRestApi(DioConfiguration.getInstance()).getCredits('en-US', id);
     print(data.cast![0].character);
     print(data.cast![0].name);
     return data;

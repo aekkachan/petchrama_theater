@@ -67,19 +67,153 @@ final upcomingMoviesProvider = AutoDisposeFutureProvider<Upcoming?>.internal(
 );
 
 typedef UpcomingMoviesRef = AutoDisposeFutureProviderRef<Upcoming?>;
-String _$creditMoviesHash() => r'34fa8314879ecae8c5e840cca9fc43d9e99a8ce8';
+String _$creditMoviesHash() => r'49edba061d9779f2c203113c26bed9d64130c9a2';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
 
 /// See also [creditMovies].
 @ProviderFor(creditMovies)
-final creditMoviesProvider = AutoDisposeFutureProvider<Credits?>.internal(
-  creditMovies,
-  name: r'creditMoviesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$creditMoviesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const creditMoviesProvider = CreditMoviesFamily();
 
-typedef CreditMoviesRef = AutoDisposeFutureProviderRef<Credits?>;
+/// See also [creditMovies].
+class CreditMoviesFamily extends Family<AsyncValue<Credits?>> {
+  /// See also [creditMovies].
+  const CreditMoviesFamily();
+
+  /// See also [creditMovies].
+  CreditMoviesProvider call(
+    String id,
+  ) {
+    return CreditMoviesProvider(
+      id,
+    );
+  }
+
+  @override
+  CreditMoviesProvider getProviderOverride(
+    covariant CreditMoviesProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'creditMoviesProvider';
+}
+
+/// See also [creditMovies].
+class CreditMoviesProvider extends AutoDisposeFutureProvider<Credits?> {
+  /// See also [creditMovies].
+  CreditMoviesProvider(
+    String id,
+  ) : this._internal(
+          (ref) => creditMovies(
+            ref as CreditMoviesRef,
+            id,
+          ),
+          from: creditMoviesProvider,
+          name: r'creditMoviesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$creditMoviesHash,
+          dependencies: CreditMoviesFamily._dependencies,
+          allTransitiveDependencies:
+              CreditMoviesFamily._allTransitiveDependencies,
+          id: id,
+        );
+
+  CreditMoviesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
+  final String id;
+
+  @override
+  Override overrideWith(
+    FutureOr<Credits?> Function(CreditMoviesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: CreditMoviesProvider._internal(
+        (ref) => create(ref as CreditMoviesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Credits?> createElement() {
+    return _CreditMoviesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CreditMoviesProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin CreditMoviesRef on AutoDisposeFutureProviderRef<Credits?> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _CreditMoviesProviderElement
+    extends AutoDisposeFutureProviderElement<Credits?> with CreditMoviesRef {
+  _CreditMoviesProviderElement(super.provider);
+
+  @override
+  String get id => (origin as CreditMoviesProvider).id;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
