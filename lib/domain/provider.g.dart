@@ -67,7 +67,7 @@ final upcomingMoviesProvider = AutoDisposeFutureProvider<Upcoming?>.internal(
 );
 
 typedef UpcomingMoviesRef = AutoDisposeFutureProviderRef<Upcoming?>;
-String _$creditMoviesHash() => r'34fa8314879ecae8c5e840cca9fc43d9e99a8ce8';
+String _$creditMoviesHash() => r'5ad3436a4ca01ad1ce82ab2c2722ea8732a087ac';
 
 /// See also [creditMovies].
 @ProviderFor(creditMovies)
@@ -81,5 +81,20 @@ final creditMoviesProvider = AutoDisposeFutureProvider<Credits?>.internal(
 );
 
 typedef CreditMoviesRef = AutoDisposeFutureProviderRef<Credits?>;
+String _$loadMoreItemsHash() => r'f8d7d57b66f9728b59d6272a23fb747df5e74ab7';
+
+/// See also [loadMoreItems].
+@ProviderFor(loadMoreItems)
+final loadMoreItemsProvider = AutoDisposeFutureProvider<List<String>>.internal(
+  loadMoreItems,
+  name: r'loadMoreItemsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$loadMoreItemsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LoadMoreItemsRef = AutoDisposeFutureProviderRef<List<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

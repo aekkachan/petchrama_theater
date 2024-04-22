@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:petchrama_theater/presentation/page/home_view.dart';
+import 'package:petchrama_theater/presentation/page/movie_grid.dart';
 
 void main() {
   runApp(
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         bodyColor: Colors.white,
       )),
       themeMode: ThemeMode.dark,
-      home: const HomeView(),
+      home: const MovieGrid(),
     );
   }
 }
