@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:petchrama_theater/data/model/top_rate.dart' as _topRate;
 import 'package:petchrama_theater/domain/provider.dart';
 import 'package:petchrama_theater/presentation/page/movie_detail.dart';
 import 'package:petchrama_theater/utils/constants/apis.dart';
