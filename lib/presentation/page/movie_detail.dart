@@ -81,8 +81,8 @@ class _MovieDetailState extends State<MovieDetail> {
                             baseColor: Colors.grey.shade400,
                             highlightColor: Colors.grey.shade100,
                             child: Container(
-                              width: _utils.getWidth() * 0.9,
-                              height: _utils.getHeight() * 0.28,
+                              width: _utils.getWidth() * 0.95,
+                              height: _utils.getHeight() * 0.30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.grey,
@@ -254,7 +254,8 @@ class _MovieDetailState extends State<MovieDetail> {
                           child: Padding(
                             padding: EdgeInsets.only(right: 10),
                             child: Chip(
-                              labelPadding: EdgeInsets.only(left: _utils.getWidth() * 0.04, right: _utils.getWidth() * 0.04),
+                              labelPadding:
+                                  EdgeInsets.only(left: _utils.getWidth() * 0.04, right: _utils.getWidth() * 0.04),
                               padding: EdgeInsets.all(0),
                               backgroundColor: Colors.white70,
                               clipBehavior: Clip.antiAlias,
