@@ -9,14 +9,14 @@ import 'package:retrofit/retrofit.dart';
 
 part 'movies_rest_api.g.dart';
 
-@RestApi(baseUrl: Apis.baseTMDBService)
+@RestApi(baseUrl: Apis.baseTMDBMovieListService)
 abstract class MoviesRestApi {
   factory MoviesRestApi(Dio dio, {String baseUrl}) = _MoviesRestApi;
 
   @GET(Apis.nowPlaying)
   Future<NowPlaying> getNowPlayingMovies(
     @Query("language") String language,
-    @Query("page") String page,
+    @Query("page") int page,
   );
 
   @GET(Apis.popular)

@@ -84,7 +84,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               width: _utils.getWidth() * 0.95,
                               height: _utils.getHeight() * 0.30,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(5),
                                 color: Colors.grey,
                               ),
                             ),
@@ -101,8 +101,10 @@ class _MovieDetailState extends State<MovieDetail> {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         widget.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 25.0, // Example font size
+                          fontSize: 23.0, // Example font size
                           color: Colors.white, // Example text color
                         ),
                       ),
@@ -224,7 +226,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               tag: widget.imgTag,
                               child: Container(
                                 clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
                                 child: CachedNetworkImage(
                                   fit: BoxFit.fitWidth,
                                   width: _utils.getWidth() * 0.30,

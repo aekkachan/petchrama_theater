@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:petchrama_theater/presentation/page/all_movies_view.dart';
 import 'package:petchrama_theater/presentation/page/home_view.dart';
+import 'package:petchrama_theater/presentation/page/search_movies_view.dart';
+import 'package:petchrama_theater/presentation/page/test.dart';
 
 void main() {
+  // unawaited(RiveFile.);
   runApp(
     // To install Riverpod, we need to add this widget above everything else.
     ProviderScope(
@@ -22,16 +26,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-          textTheme: GoogleFonts.bebasNeueTextTheme().apply(
-        bodyColor: Colors.black,
-      )),
+      // theme: ThemeData.light().copyWith(
+      //     textTheme: GoogleFonts.bebasNeueTextTheme().apply(
+      //   bodyColor: Colors.black,
+      // )),
       darkTheme: ThemeData.dark().copyWith(
-          textTheme: GoogleFonts.bebasNeueTextTheme().apply(
+          textTheme: GoogleFonts.latoTextTheme().apply(
         bodyColor: Colors.white,
       )),
       themeMode: ThemeMode.dark,
-      home: const HomeView(),
+      home: AllMoviesView(),
+      // home: HomeView(),
     );
   }
 }

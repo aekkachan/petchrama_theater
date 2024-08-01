@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:petchrama_theater/data/datasources/remote/movies_rest_api.dart';
 import 'package:petchrama_theater/data/model/now_playing.dart';
 import 'package:petchrama_theater/data/model/popular.dart';
@@ -8,10 +10,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'provider.g.dart';
 
+// Define a StateNotifier to manage the boolean state
+class SwitchNotifier extends StateNotifier<bool> {
+  SwitchNotifier() : super(false); // Initial state is false
+  // Method to toggle the boolean state
+  void toggle() => state = !state;
+}
+
+// Define a StateNotifierProvider to expose the SwitchNotifier
+final suggestChipProvider = StateNotifierProvider<SwitchNotifier, bool>((ref) {
+  return SwitchNotifier();
+});
+
 @riverpod
-Future<NowPlaying?> nowPlayingMovies(NowPlayingMoviesRef ref) async {
+Future<NowPlaying?> nowPlayingMovies(NowPlayingMoviesRef ref, int page) async {
   try {
-    NowPlaying data = await MoviesRestApi(DioConfiguration.getInstance()).getNowPlayingMovies('en-US', '1');
+    NowPlaying data = await MoviesRestApi(DioConfiguration.getInstance()).getNowPlayingMovies('en-US', page);
     print(data.results![0].originalTitle);
     return data;
   } catch (error) {

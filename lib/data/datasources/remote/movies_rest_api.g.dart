@@ -23,7 +23,7 @@ class _MoviesRestApi implements MoviesRestApi {
   @override
   Future<NowPlaying> getNowPlayingMovies(
     String language,
-    String page,
+    int page,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
